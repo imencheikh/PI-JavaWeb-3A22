@@ -9,7 +9,7 @@ public class EventService implements Iservice<Events> {
     Connection cnx;
 
     public EventService() {
-        cnx = DatabaseConnection.instance.getCnx();
+        cnx = DatabaseConnection.getInstance().getCnx();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class DatabaseConnection {
 
 
     public static DatabaseConnection instance;
-    public DatabaseConnection(){
+    private DatabaseConnection(){
 
         String Url="jdbc:mysql://localhost/projetpi";
         String Username="root";
