@@ -21,8 +21,6 @@
 
         <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="🏠 Acceuil" />
         <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="📅 Liste Sponsor" />
-        <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn selected-btn" text="✏️ Modifier Sponsor" />
-        <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="⚙️ Paramètres" />
     </VBox>
 
     <!-- Contenu principal -->

@@ -54,11 +54,15 @@ public class AfficherEvent {
                             eventDate.setFont(new Font("Arial", 14));
                             eventDate.setStyle("-fx-fill: #7B7B7B;");
 
-                            Text eventDesc = new Text(event.getDescription());
+                            Text eventDesc = new Text("A propos de l'evenement: "+event.getDescription());
                             eventDesc.setFont(new Font("Arial", 14));
                             eventDesc.setStyle("-fx-fill: #555;");
 
-                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc);
+                            Text eventSpon = new Text("Sponsorisé Par: "+event.getNomSp());
+                            eventSpon.setFont(new Font("Arial", 14));
+                            eventSpon.setStyle("-fx-fill: #555;");
+
+                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc,eventSpon);
                             setGraphic(eventBox);
                         }
                     }
@@ -72,7 +76,7 @@ public class AfficherEvent {
         // Événement de clic sur un élément
         eventListView.setOnMouseClicked(event -> {
             Events selectedEvent = eventListView.getSelectionModel().getSelectedItem();
-            System.out.println("Événement sélectionné : " + (selectedEvent != null ? selectedEvent.getNomEv() : "Aucun"));
+            System.out.println("Événement sélectionné : " + (selectedEvent != null ? selectedEvent.getIdEvent() : "Aucun"));
 
             if (selectedEvent != null) {
                 ouvrirModifierEvent(selectedEvent);
@@ -80,6 +84,26 @@ public class AfficherEvent {
         });
     }
 
+    // Méthode pour ouvrir l'interface AjouterEvent.fxml
+    @FXML
+    private void ouvrirAjouterEvent() {
+        try {
+            System.out.println("Ouverture de l'interface AjouterEvent.fxml...");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterEvent.fxml"));
+            Parent root = loader.load();
+
+            // Obtenez le contrôleur de l'interface AjouterEvent
+            AjouterEvent controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter un Événement");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors du chargement de AjouterEvent.fxml !");
+        }
+    }
     private void ouvrirModifierEvent(Events event) {
         try {
             System.out.println("Ouverture de la fenêtre de modification...");
@@ -97,7 +121,7 @@ public class AfficherEvent {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace(); // Vérifier si une erreur se produit
+            e.printStackTrace();
             System.err.println("Erreur lors du chargement de ModifierEvent.fxml !");
         }
     }
@@ -111,6 +135,6 @@ public class AfficherEvent {
         eventListView.getItems().setAll(eventsList);
 
         // Forcer la réaffichage de la ListView
-        eventListView.requestLayout();  // Demander une nouvelle disposition
+        eventListView.requestLayout();
     }
 }

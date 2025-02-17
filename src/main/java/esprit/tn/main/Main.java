@@ -44,7 +44,7 @@ public class Main {
 
                         // Création de l'événement avec la date convertie
                         Events E = new Events(nomEv, description, dateEvent);
-                        ev.ajouter(E);
+                       // ev.ajouter(E);
 
                         System.out.println("Événement ajouté avec succès !");
                     } catch (IllegalArgumentException e) {

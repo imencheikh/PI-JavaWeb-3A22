@@ -13,8 +13,10 @@ public class EventService implements Iservice<Events> {
     }
 
     @Override
-    public void ajouter(Events event) {
-        String req = "INSERT INTO events (nomEv, description, dateEvent) VALUES (?, ?, ?)";
+    public void ajouter(Events event) throws SQLException {
+
+        ////////////////////////
+        String req = "INSERT INTO events (nomEv, description, dateEvent,nomSp) VALUES (?, ?, ?,?)";
 
         try {
             PreparedStatement stm = cnx.prepareStatement(req);
@@ -22,7 +24,7 @@ public class EventService implements Iservice<Events> {
             stm.setString(2, event.getDescription());
             java.sql.Date sqlDate = new java.sql.Date(event.getDateEvent().getTime());
             stm.setDate(3, sqlDate);
-
+            stm.setString(4, event.getNomSp());
             stm.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -30,8 +32,8 @@ public class EventService implements Iservice<Events> {
     }
 
     public void modifier(Events event) {
-        String reqSelect = "SELECT nomEv, description, dateEvent FROM events WHERE idEvent = ?";
-        String reqUpdate = "UPDATE events SET nomEv = ?, description = ?, dateEvent = ? WHERE idEvent = ?";
+        String reqSelect = "SELECT nomEv, description, dateEvent ,nomSp FROM events WHERE idEvent = ?";
+        String reqUpdate = "UPDATE events SET nomEv = ?, description = ?, dateEvent = ? ,nomSp= ? WHERE idEvent = ?";
 
         try (
                 PreparedStatement stmSelect = cnx.prepareStatement(reqSelect);
@@ -43,15 +45,18 @@ public class EventService implements Iservice<Events> {
                     String oldNomEv = rs.getString("nomEv");
                     String oldDescription = rs.getString("description");
                     java.sql.Date oldDateEvent = rs.getDate("dateEvent");
+                    String oldNomSp = rs.getString("nomSp");
 
                     String newNomEv = (event.getNomEv() == null || event.getNomEv().isEmpty()) ? oldNomEv : event.getNomEv();
                     String newDescription = (event.getDescription() == null || event.getDescription().isEmpty()) ? oldDescription : event.getDescription();
                     java.sql.Date newDateEvent = (event.getDateEvent() == null) ? oldDateEvent : new java.sql.Date(event.getDateEvent().getTime());
+                    String newNomSp = (event.getNomSp() == null || event.getNomSp().isEmpty()) ? oldNomSp : event.getNomSp();
 
                     stmUpdate.setString(1, newNomEv);
                     stmUpdate.setString(2, newDescription);
                     stmUpdate.setDate(3, newDateEvent);
-                    stmUpdate.setInt(4, event.getIdEvent());
+                    stmUpdate.setString(4, newNomSp);
+                    stmUpdate.setInt(5, event.getIdEvent());
 
                     int rowsUpdated = stmUpdate.executeUpdate();
                     if (rowsUpdated > 0) {
@@ -99,6 +104,7 @@ public class EventService implements Iservice<Events> {
                 E.setNomEv(rs.getString("NomEv"));
                 E.setDescription(rs.getString("Description"));
                 E.setDateEvent(rs.getDate("DateEvent"));
+                E.setNomSp(rs.getString("NomSp"));
                 ev.add(E);
             }
 
@@ -121,6 +127,7 @@ public class EventService implements Iservice<Events> {
                     event.setNomEv(rs.getString("NomEv"));
                     event.setDescription(rs.getString("Description"));
                     event.setDateEvent(rs.getDate("DateEvent"));
+                    event.setNomSp(rs.getString("NomSp"));
                     return event;
                 }
             }

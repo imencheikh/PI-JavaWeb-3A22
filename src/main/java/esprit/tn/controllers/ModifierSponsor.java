@@ -14,7 +14,6 @@ public class ModifierSponsor {
     private TextField TFNomSponsor;
     @FXML
     private TextField TFEmailSponsor;
-
     @FXML
     private TextField TFMontantSponsor;
     @FXML
@@ -39,13 +38,11 @@ public class ModifierSponsor {
     @FXML
     private void modifierSponsor() {
         if (validerChamps()) {
-            selectedSponsor.setNomSponsor(TFNomSponsor.getText());
-            selectedSponsor.setContribution(Float.parseFloat(TFMontantSponsor.getText()));
-
-            selectedSponsor.setEmailSpon(TFEmailSponsor.getText());
+            selectedSponsor.setNomSponsor(TFNomSponsor.getText().trim());
+            selectedSponsor.setContribution(Float.parseFloat(TFMontantSponsor.getText().trim()));
+            selectedSponsor.setEmailSpon(TFEmailSponsor.getText().trim());
 
             sponsorService.modifier(selectedSponsor);
-
             afficherAlerte("Modification", "Sponsor modifié avec succès !");
 
             // Rafraîchir la liste des sponsors après modification
@@ -93,15 +90,32 @@ public class ModifierSponsor {
     }
 
     private boolean validerChamps() {
-        if (TFNomSponsor.getText().trim().isEmpty() || TFMontantSponsor.getText().trim().isEmpty() || TFEmailSponsor.getText().trim().isEmpty()) {
+        String nom = TFNomSponsor.getText().trim();
+        String email = TFEmailSponsor.getText().trim();
+        String montantStr = TFMontantSponsor.getText().trim();
+
+        if (nom.isEmpty() || email.isEmpty() || montantStr.isEmpty()) {
             afficherAlerte("Erreur", "Tous les champs doivent être remplis !");
             return false;
         }
 
+        // Vérification du format du nom (uniquement lettres et espaces)
+        if (!isValidName(nom)) {
+            afficherAlerte("Erreur", "Le nom du sponsor ne doit contenir que des lettres et des espaces !");
+            return false;
+        }
+
+        // Vérification du format de l'email
+        if (!isValidEmail(email)) {
+            afficherAlerte("Erreur", "L'email n'est pas valide !");
+            return false;
+        }
+
+        // Vérification du format du montant
         try {
-            float montant = Float.parseFloat(TFMontantSponsor.getText());
+            float montant = Float.parseFloat(montantStr);
             if (montant < 0) {
-                afficherAlerte("Erreur", "Le montant doit être positif !");
+                afficherAlerte("Erreur", "Le montant doit être un nombre positif !");
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -109,14 +123,17 @@ public class ModifierSponsor {
             return false;
         }
 
-        // Validation de l'email
-        String email = TFEmailSponsor.getText();
-        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-            afficherAlerte("Erreur", "L'email n'est pas valide !");
-            return false;
-        }
-
         return true;
     }
 
+    // Méthode pour valider que le nom ne contient que des lettres et des espaces
+    private boolean isValidName(String name) {
+        return name.matches("^[a-zA-ZÀ-ÖØ-öø-ÿ\\s]+$");
+    }
+
+    // Méthode pour valider un email avec une expression régulière
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
 }

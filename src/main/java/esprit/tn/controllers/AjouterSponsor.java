@@ -43,7 +43,11 @@ public class AjouterSponsor {
             showAlert("Erreur", "L'email du sponsor est invalide !");
             return;
         }
-
+        // Vérification du nom du sponsor
+        if (!isValidName(nomSponsor)) {
+            showAlert("Erreur", "Le nom du sponsor ne doit contenir que des lettres et des espaces !");
+            return;
+        }
         // Vérification si la contribution est un nombre valide
         float contribution;
         try {
@@ -80,7 +84,10 @@ public class AjouterSponsor {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    // Méthode pour valider le nom du sponsor
+    private boolean isValidName(String name) {
+        return name.matches("^[a-zA-ZÀ-ÖØ-öø-ÿ\\s]+$");
+    }
     // Méthode de validation de l'email
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";

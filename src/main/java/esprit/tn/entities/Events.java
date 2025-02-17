@@ -8,14 +8,15 @@ public class Events {
     private String nomEv;
     private String description;
     private Date dateEvent;
-
+    private String nomSp;
     public Events(){}
-    public Events(int idEvent,String nomEv,String description,Date dateEvent)
+    public Events(int idEvent,String nomEv,String description,Date dateEvent, String nomSp)
     {
         this.idEvent=idEvent;
         this.nomEv=nomEv;
         this.description=description;
         this.dateEvent=dateEvent;
+        this.nomSp=nomSp;
 
     }
     public Events(String nomEv,String description,Date dateEvent)
@@ -59,7 +60,13 @@ public class Events {
         this.dateEvent = dateEvent;
     }
 
+    public void setNomSp(String nomSp) {
+        this.nomSp = nomSp;
+    }
 
+    public String getNomSp() {
+        return nomSp;
+    }
 
     @Override
     public boolean equals(Object o) {

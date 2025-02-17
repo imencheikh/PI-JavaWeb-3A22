@@ -1,13 +1,19 @@
 package esprit.tn.controllers;
 
 import esprit.tn.entities.Events;
+import esprit.tn.entities.Sponsors;
 import esprit.tn.services.EventService;
+import esprit.tn.services.SponsorService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -22,20 +28,34 @@ public class ModifierEvent {
     @FXML
     private DatePicker dateEvent;
     @FXML
+    private ComboBox<String> comboBoxSponsors;
+    @FXML
     private Button btnModifier;
     @FXML
     private Button btnSupprimer;
 
     private Events selectedEvent;
+    private Sponsors sponsors;
     private final EventService eventService = new EventService();
     private AfficherEvent afficherEventController;
+    private final SponsorService sponsorService = new SponsorService();
+
+    private void chargerSponsors() {
+        List<String> sponsors = sponsorService.getAll().stream()
+                .map(Sponsors::getNomSponsor) // Récupérer uniquement les noms
+                .collect(Collectors.toList());
+
+        comboBoxSponsors.getItems().setAll(sponsors);
+    }
 
     public void setEvent(Events event) {
+        chargerSponsors(); // Charger les sponsors avant d'affecter la valeur
         if (event != null) {
             selectedEvent = event;
             // Récupérer et afficher les informations de l'événement dans les champs
             TFNomEvent.setText(event.getNomEv());
             TFDescription.setText(event.getDescription());
+            comboBoxSponsors.setValue(event.getNomSp());
 
             Date date = event.getDateEvent();
             if (date instanceof java.sql.Date) {
@@ -54,8 +74,8 @@ public class ModifierEvent {
         if (validerChamps()) {
             selectedEvent.setNomEv(TFNomEvent.getText());
             selectedEvent.setDescription(TFDescription.getText());
-            selectedEvent.setDateEvent(java.sql.Date.valueOf(dateEvent.getValue())); // Correct
-
+            selectedEvent.setDateEvent(java.sql.Date.valueOf(dateEvent.getValue()));
+            selectedEvent.setNomSp(comboBoxSponsors.getValue());
             eventService.modifier(selectedEvent);
 
             afficherAlerte("Modification", "Événement modifié avec succès !");
@@ -107,10 +127,33 @@ public class ModifierEvent {
 
     // Validation des champs
     private boolean validerChamps() {
+        // Vérification des champs obligatoires
         if (TFNomEvent.getText().isEmpty() || TFDescription.getText().isEmpty() || dateEvent.getValue() == null) {
             afficherAlerte("Erreur", "Tous les champs doivent être remplis !");
             return false;
         }
+
+        // Vérification que le nom de l'événement contient uniquement des lettres et des espaces
+        String nomEv = TFNomEvent.getText().trim();
+        if (!nomEv.matches("[a-zA-Z\\s]+")) {
+            afficherAlerte("Erreur", "Le nom de l'événement ne doit contenir que des lettres et des espaces !");
+            return false;
+        }
+
+        // Vérification que le sponsor est bien sélectionné et n'est pas vide
+        String selectedSponsor = comboBoxSponsors.getValue();
+        if (selectedSponsor.trim().isEmpty()) {
+            afficherAlerte("Erreur", "Veuillez sélectionner un sponsor valide !");
+            return false;
+        }
         return true;
+    }
+
+    @FXML
+    void afficherAjouterSponsor(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/AjouterSponsor.fxml"));
+        TFNomEvent.getScene().setRoot(root);
+       /* TFDescription.getScene().setRoot(root);
+        dateEvent.getScene().setRoot(root);*/
     }
 }

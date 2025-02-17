@@ -25,10 +25,8 @@
             <VBox.margin>
                 <Insets top="40.0" />
             </VBox.margin></Button>
-        <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="📅 Voir Événements" />
         <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="➕ Ajouter Événement" />
         <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn selected-btn" text="➕ Ajouter Sponsor" />
-        <Button prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="⚙️ Paramètres" />
 
     </VBox>
 
