@@ -14,13 +14,20 @@ public class Reclamation {
     private String email;
     private Date date;
     private String description;
-    private Type categorie;
+    private String categorie;
 
-    public Reclamation(){
+  //  public Reclamation(){}
+    public Reclamation(String nom_utilisateur, String email, String description, String categorie, int id){
+     this.nom_utilisateur=nom_utilisateur;
+     this.email=email;
+     this.description=description;
+     this.categorie=categorie;
 
     }
 
-public Reclamation(int id_reclamation, String nom_utilisateur, String email, Date date, String description, Type categorie){
+
+
+public Reclamation(int id_reclamation, String nom_utilisateur, String email, Date date, String description, String categorie){
 this.id_reclamation=id_reclamation;
 this.nom_utilisateur=nom_utilisateur;
 this.email=email;
@@ -67,11 +74,11 @@ this.categorie=categorie;
         this.description = description;
     }
 
-    public Type getCategorie(){
+    public String getCategorie(){
         return categorie;
     }
 
-    public void setCategorie(Type categorie) {
+    public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
 
@@ -85,6 +92,7 @@ this.categorie=categorie;
                 Objects.equals(date, reclamation.date) &&
                 Objects.equals(description, reclamation.description) &&
                 categorie == reclamation.categorie; // Comparaison directe pour une énumération
+
     }
 
     public int hashCode() {
@@ -102,7 +110,6 @@ this.categorie=categorie;
                 ", categorie=" + categorie +
                 '}';
     }
-
 
 
 

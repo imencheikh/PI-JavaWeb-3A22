@@ -1,31 +1,41 @@
 package esprit.tn.services;
+import controllers.ModifierReclamation;
 import esprit.tn.main.DatabaseConnection;
 import esprit.tn.entities.Reclamation;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import esprit.tn.entities.Type;
-import java.util.Date;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 
 public  class ReclamationService implements Iservice<Reclamation>{
     Connection cnx;
 
     public ReclamationService (){
 
-        cnx= DatabaseConnection.instance.getCnx();
+        cnx= DatabaseConnection.getInstance().getCnx();
     }
+
+
+    // Déclaration de la liste des réclamations
+    private List<Reclamation> reclamations;
 
     @Override
     public void ajouter(Reclamation reclamation) {
-        String req = "INSERT INTO Reclamation (nom_utilisateur, email, date, description, categorie) VALUES (?, ?, ?, ?, ?)";
+        String req = "INSERT INTO Reclamation (nom_utilisateur, email,  description,categorie) VALUES (?, ?, ?,?)";
 
         try {
             PreparedStatement stm = cnx.prepareStatement(req);
             stm.setString(1, reclamation.getNom_utilisateur());
             stm.setString(2, reclamation.getEmail());
-            stm.setDate(3, new java.sql.Date(reclamation.getDate().getTime())); // Conversion de java.util.Date en java.sql.Date
-            stm.setString(4, reclamation.getDescription());
-            stm.setString(5, reclamation.getCategorie().name()); // Enregistrer l'énumération sous forme de String
+          //  stm.setDate(3, new java.sql.Date(reclamation.getDate().getTime())); // Conversion de java.util.Date en java.sql.Date
+            stm.setString(3, reclamation.getDescription());
+           stm.setString(4, reclamation.getCategorie()); // Enregistrer l'énumération sous forme de String
 
             stm.executeUpdate();
             System.out.println("Réclamation ajoutée avec succès !");
@@ -37,69 +47,27 @@ public  class ReclamationService implements Iservice<Reclamation>{
     @Override
     public void modifier(Reclamation reclamation) {
 
-        String reqSelect = "SELECT nom_utilisateur, email, date, description, categorie FROM reclamation WHERE Id_reclamation = ?";
-        String reqUpdate = "UPDATE reclamation SET nom_utilisateur = ?, email = ?, date = ?, description = ?, categorie = ? WHERE Id_reclamation = ?";
-
         try {
-            PreparedStatement stmSelect = cnx.prepareStatement(reqSelect);
-            stmSelect.setInt(1, reclamation.getId_reclamation());
-            ResultSet rs = stmSelect.executeQuery();
+            // Charger le fichier FXML de la fenêtre de modification
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/modifier_reclamation.fxml"));
+            Parent root = loader.load();
 
-            if (rs.next()) {  // Vérifie si une réclamation avec cet ID existe
-                String oldNomUtilisateur = rs.getString("nom_utilisateur");
-                String oldEmail = rs.getString("email");
-                Date oldDate = rs.getDate("date");  // Assurez-vous que la date récupérée est un java.sql.Date
-                String oldDescription = rs.getString("description");
-                String oldCategorie = rs.getString("categorie");
+            // Récupérer le contrôleur de la fenêtre de modification
+            ModifierReclamation controller = loader.getController();
+           controller.initData(reclamation);  // Envoyer les données de la réclamation sélectionnée
 
-                // Si le nouveau nom_utilisateur est null ou vide, garde l'ancien
-                String newNomUtilisateur = (reclamation.getNom_utilisateur() == null || reclamation.getNom_utilisateur().isEmpty())
-                        ? oldNomUtilisateur : reclamation.getNom_utilisateur();
+            // Créer un nouveau Stage (fenêtre)
+            Stage stage = new Stage();
+            stage.setTitle("Modifier Réclamation");
+            stage.setScene(new Scene(root));
 
-                // Si le nouvel email est null ou vide, garde l'ancien
-                String newEmail = (reclamation.getEmail() == null || reclamation.getEmail().isEmpty())
-                        ? oldEmail : reclamation.getEmail();
 
-                // Si la nouvelle date est null, garde l'ancienne
-                Date newDate = (reclamation.getDate() == null) ? oldDate : reclamation.getDate();
+            // Afficher la nouvelle fenêtre
+            stage.show();
 
-                // Si la nouvelle description est null ou vide, garde l'ancienne
-                String newDescription = (reclamation.getDescription() == null || reclamation.getDescription().isEmpty())
-                        ? oldDescription : reclamation.getDescription();
-
-                // Si la nouvelle catégorie est null, garde l'ancienne
-                String newCategorie = (reclamation.getCategorie() == null) ? oldCategorie : reclamation.getCategorie().name();
-
-                // Préparer la requête de mise à jour avec les nouveaux attributs
-                PreparedStatement stmUpdate = cnx.prepareStatement(reqUpdate);
-                stmUpdate.setString(1, newNomUtilisateur);
-                stmUpdate.setString(2, newEmail);
-
-                // Assurez-vous que newDate n'est pas null avant de la passer à setDate
-                if (newDate != null) {
-                    stmUpdate.setDate(3, new java.sql.Date(newDate.getTime()));  // Conversion de java.util.Date en java.sql.Date
-                } else {
-                    // Si la date est null, on peut la mettre comme null dans la base
-                    stmUpdate.setNull(3, java.sql.Types.DATE);
-                }
-
-                stmUpdate.setString(4, newDescription);
-                stmUpdate.setString(5, newCategorie);
-                stmUpdate.setInt(6, reclamation.getId_reclamation());
-
-                int rowsUpdated = stmUpdate.executeUpdate();
-                if (rowsUpdated > 0) {
-                    System.out.println("Réclamation modifiée avec succès !");
-                } else {
-                    System.out.println("Aucune réclamation trouvée avec cet ID.");
-                }
-            } else {
-                System.out.println("Réclamation introuvable avec l'ID : " + reclamation.getId_reclamation());
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la modification de la réclamation : " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
 
@@ -139,19 +107,25 @@ public  class ReclamationService implements Iservice<Reclamation>{
             ResultSet rs = stm.executeQuery(req);
 
             while (rs.next()) {
-                Reclamation r = new Reclamation();
-                r.setId_reclamation(rs.getInt("Id_reclamation"));
-                r.setNom_utilisateur(rs.getString("nom_utilisateur"));
-                r.setEmail(rs.getString("email"));
-                r.setDate(rs.getDate("date"));
-                r.setDescription(rs.getString("description"));
-                r.setCategorie(Type.valueOf(rs.getString("categorie").trim().toUpperCase()));
+                // Récupérer les valeurs directement à partir de ResultSet
+                String nom_utilisateur = rs.getString("nom_utilisateur");
+                String email = rs.getString("email");
+                String description = rs.getString("description");
+                String categorie= rs.getString("categorie");
+                int id =rs.getInt("id_reclamation");
+                // Créer un objet Reclamation en utilisant les valeurs récupérées
+                Reclamation r = new Reclamation(nom_utilisateur, email, description,categorie, id);
 
-                // Convertir la catégorie en ENUM
+                // Initialiser les autres propriétés
+                r.setId_reclamation(rs.getInt("Id_reclamation"));
+                r.setDate(rs.getDate("date"));
+               // r.setCategorie(Type.valueOf(rs.getString("categorie").trim().toUpperCase()));  // Assurer que "categorie" est une valeur valide de l'énum Type
+
+                // Ajouter l'objet Reclamation à la liste
                 reclamations.add(r);
             }
 
-            System.out.println(reclamations); // Affichage des réclamations récupérées
+           // System.out.println(reclamations); // Affichage des réclamations récupérées
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la récupération des réclamations", e);
         }
@@ -183,7 +157,74 @@ public  class ReclamationService implements Iservice<Reclamation>{
             }
         }
     }
+    @Override
+    public void enregistrer(Reclamation reclamation) {
+        // Vérification de la connexion
+        if (cnx == null) {
+            System.err.println("La connexion à la base de données est fermée ou invalide.");
+            return;
+        }
 
+        // Vérification de l'ID
+        if (reclamation.getId_reclamation() == 0) {
+            System.err.println("Erreur : ID réclamation non valide (0). Vérifiez le champ ID.");
+            return;
+        }
+
+        System.out.println("Tentative de modification pour ID : " + reclamation.getId_reclamation());
+
+        // Requête pour vérifier si l'ID existe avant modification
+        String reqSelect = "SELECT nom_utilisateur, email, description FROM reclamation WHERE id_reclamation = ?";
+
+        // Requête de mise à jour SQL
+        String reqUpdate = "UPDATE reclamation SET nom_utilisateur = ?, email = ?, description = ? WHERE id_reclamation = ?";
+
+        try {
+            // Vérification si l'ID existe
+            PreparedStatement reqsel = cnx.prepareStatement(reqSelect);
+            reqsel.setInt(1, reclamation.getId_reclamation());
+            ResultSet rs = reqsel.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("Aucune réclamation trouvée avec l'ID : " + reclamation.getId_reclamation());
+                return;
+            }
+
+            // Remplissage des paramètres pour la mise à jour
+            PreparedStatement stm = cnx.prepareStatement(reqUpdate);
+            stm.setString(1, reclamation.getNom_utilisateur());
+            stm.setString(2, reclamation.getEmail());
+            stm.setString(3, reclamation.getDescription());
+            stm.setInt(4, reclamation.getId_reclamation());
+
+            // Exécution de la mise à jour
+            int rowsAffected = stm.executeUpdate();
+
+            // Vérification si la mise à jour a bien été effectuée
+            if (rowsAffected > 0) {
+                System.out.println("Réclamation mise à jour avec succès !");
+            } else {
+                System.out.println("Échec de la mise à jour. Aucune modification apportée.");
+            }
+
+        } catch (SQLException e) {
+            // Gestion des erreurs SQL
+            e.printStackTrace();
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+
+
+    public Reclamation getReclamationById(int id) {
+
+        for (Reclamation reclamation : reclamations) {
+            // Utilisez le getter pour accéder à l'ID de la réclamation
+            if (reclamation.getId_reclamation() == id) {
+                return reclamation;
+            }
+        }
+        return null; // Si la réclamation n'est pas trouvée
+    }
 
 
 }

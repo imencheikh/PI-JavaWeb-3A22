@@ -7,21 +7,28 @@ public class Reponse {
     private int id_reponse;
     private int id_reclamation;
     private String reponse;
-    private Date date_reponse;
 
 
+    // 🔹 Constructeur par défaut
     public Reponse() {
     }
 
-
-    public Reponse(int id_reponse, int id_reclamation, String reponse, Date date_reponse) {
+    // 🔹 Constructeur complet
+    public Reponse(int id_reponse, int id_reclamation, String reponse) {
         this.id_reponse = id_reponse;
         this.id_reclamation = id_reclamation;
         this.reponse = reponse;
-        this.date_reponse = date_reponse;
+
     }
 
+    // ✅ 🔹 Nouveau constructeur adapté au contrôleur
+    public Reponse(int id_reclamation, String reponse) {
+        this.id_reclamation = id_reclamation;
+        this.reponse = reponse;
 
+    }
+
+    // 🔹 Getters et Setters
     public int getId_reponse() {
         return id_reponse;
     }
@@ -46,15 +53,9 @@ public class Reponse {
         this.reponse = reponse;
     }
 
-    public Date getDate_reponse() {
-        return date_reponse;
-    }
 
-    public void setDate_reponse(Date date_reponse) {
-        this.date_reponse = date_reponse;
-    }
 
-    // Méthode equals pour comparer les objets Reponse
+    // 🔹 Méthode equals pour comparer les objets
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,24 +63,25 @@ public class Reponse {
         Reponse reponse1 = (Reponse) o;
         return id_reponse == reponse1.id_reponse &&
                 id_reclamation == reponse1.id_reclamation &&
-                Objects.equals(reponse, reponse1.reponse) &&
-                Objects.equals(date_reponse, reponse1.date_reponse);
+                Objects.equals(reponse, reponse1.reponse) ;
+
     }
 
-    // Méthode hashCode
+    // 🔹 Méthode hashCode
     @Override
     public int hashCode() {
-        return Objects.hash(id_reponse, id_reclamation, reponse, date_reponse);
+        return Objects.hash(id_reponse, id_reclamation, reponse);
     }
 
-    // Méthode toString pour afficher les objets Reponse
+    // 🔹 Méthode toString pour affichage
     @Override
     public String toString() {
         return "Reponse{" +
                 "id_reponse=" + id_reponse +
                 ", id_reclamation=" + id_reclamation +
                 ", reponse='" + reponse + '\'' +
-                ", date_reponse=" + date_reponse +
+
                 '}';
     }
 }
+

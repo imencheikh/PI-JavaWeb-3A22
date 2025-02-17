@@ -8,6 +8,7 @@ public interface Iservice <T> {
     public void ajouter(T t);
     public void modifier(T t);
 
+    public void enregistrer(T t);
     public void supprimer(int idReclamation);
 
     public List<T> getall();
@@ -17,6 +18,9 @@ public interface Iservice <T> {
 
     public T getone();
     public void afficher();
+
+
+
 
 
 }

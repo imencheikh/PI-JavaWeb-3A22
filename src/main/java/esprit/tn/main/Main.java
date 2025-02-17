@@ -9,6 +9,8 @@ import esprit.tn.services.ReponseService;
 import esprit.tn.entities.Type;
 import esprit.tn.main.DatabaseConnection;
 
+import static javafx.application.Application.launch;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -53,7 +55,7 @@ public class Main {
             int choixCategorie = scanner.nextInt();
             scanner.nextLine();
 
-            Type categorie = switch (choixCategorie) {
+           /* Type categorie = switch (choixCategorie) {
                 case 1 -> Type.BUG_TECHNIQUE;
                 case 2 -> Type.PROBLEME_LOGISTIQUE;
                 case 3 -> Type.PROBLEME_PAIEMENT;
@@ -62,10 +64,10 @@ public class Main {
                     System.out.println("Choix invalide, catégorie par défaut : BUG_TECHNIQUE");
                     yield Type.BUG_TECHNIQUE;
                 }
-            };
+            };*/
 
-            Reclamation reclamation = new Reclamation(0, nom_utilisateur, email, new Date(), description, categorie);
-            reclamationService.ajouter(reclamation);
+           // Reclamation reclamation = new Reclamation(0, nom_utilisateur, email, new Date(), description, categorie);
+           // reclamationService.ajouter(reclamation);
             System.out.println("Réclamation ajoutée avec succès !");
 
         } else if (choixAction == 2) {
@@ -108,8 +110,8 @@ public class Main {
                 }
             };
 
-            Reclamation reclamation = new Reclamation(idReclamation, nom_utilisateur, email, new Date(), description, categorie);
-            reclamationService.modifier(reclamation);
+           // Reclamation reclamation = new Reclamation(idReclamation, nom_utilisateur, email, new Date(), description, categorie);
+            //reclamationService.modifier(reclamation);
             System.out.println("Réclamation modifiée avec succès !");
 
         } else if (choixAction == 4) {
@@ -120,7 +122,7 @@ public class Main {
             System.out.print("Entrez votre réponse : ");
             String reponse = scanner.nextLine();
 
-            Reponse reponseObj = new Reponse(0, idReclamation, reponse, new Date());
+            Reponse reponseObj = new Reponse(0, idReclamation, reponse);
             reponseService.ajouter(reponseObj);
             System.out.println("Réponse ajoutée avec succès !");
 
@@ -139,7 +141,7 @@ public class Main {
             System.out.print("Entrez la nouvelle réponse : ");
             String nouvelleReponse = scanner.nextLine();
 
-            Reponse reponseObj = new Reponse(idReponse, 0, nouvelleReponse, new Date());
+            Reponse reponseObj = new Reponse(idReponse, 0, nouvelleReponse);
             reponseService.modifier(reponseObj);
             System.out.println("Réponse modifiée avec succès !");
 
