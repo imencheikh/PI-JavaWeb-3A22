@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AdminController">
+    <Label text="Admin Panel" BorderPane.alignment="CENTER"
+           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px;"/>
+
+    <VBox spacing="10" style="-fx-padding: 20px;">
+        <ListView fx:id="userListView" prefHeight="200"/>
+
+        <HBox spacing="10">
+            <Button text="Delete User" fx:id="deleteUserButton" onAction="#handleDeleteUser"/>
+        </HBox>
+
+        <Button text="Logout" fx:id="logoutButton" onAction="#handleLogout" style="-fx-background-color: red;"/>
+    </VBox>
+</BorderPane>
