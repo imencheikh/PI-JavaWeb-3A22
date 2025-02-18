@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="911.0" prefWidth="1313.0"  stylesheets="@fullpackstyling.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo4.AffichertrajetController">
+   <children>
+      <TextField fx:id="destinationevField" layoutX="785.0" layoutY="740.0" prefHeight="33.0" prefWidth="214.0" promptText="destination" style="-fx-background-radius: 30;" />
+      <TextField fx:id="departureevField" layoutX="785.0" layoutY="519.0" prefHeight="33.0" prefWidth="214.0" promptText="departure" style="-fx-background-radius: 30;" />
+      <TextField fx:id="scheduleevField" layoutX="785.0" layoutY="586.0" prefHeight="33.0" prefWidth="214.0" promptText="schedule" style="-fx-background-radius: 30;" />
+
+      <TextField fx:id="descriptionevField" layoutX="785.0" layoutY="666.0" prefHeight="33.0" prefWidth="214.0" promptText="statut" style="-fx-background-radius: 30;" />
+      <TableView fx:id="tabletrajet" layoutX="71.0" layoutY="530.0" onMouseClicked="#choisirtrajet" prefHeight="318.0" prefWidth="680.0">
+         <columns>
+            <TableColumn fx:id="iduserTv" prefWidth="109.0" text="id utilisateur" />
+            <TableColumn fx:id="idevTv" prefWidth="115.0" text="id transport" />
+            <TableColumn fx:id="datePartTv" prefWidth="85.0" text="date trajet" />
+            <TableColumn fx:id="descriptionevTv" prefWidth="123.0" text="statut" />
+            <TableColumn fx:id="destinationevTv" prefWidth="72.0" text="destination" />
+            <TableColumn fx:id="departureevTv" prefWidth="84.0" text="departure" />
+            <TableColumn fx:id="scheduleevTv" prefWidth="1685.0" text="schedule" />
+         </columns>
+      </TableView>
+
+      <Button fx:id="reserverevButton" layoutX="969.0" layoutY="383.0" mnemonicParsing="false" onMouseClicked="#reserverev" prefHeight="44.0" prefWidth="221.0" style="-fx-background-radius: 30;" text="Ajouter au trajet" />
+
+      <Button fx:id="modifierPartBtn" layoutX="1039.0" layoutY="704.0" mnemonicParsing="false" onAction="#modifiertrajet" prefHeight="59.0" prefWidth="201.0" style="-fx-background-radius: 30;" text="modifier trajet" textFill="#f05c00" />
+      <Button fx:id="supprimerPartBtn" layoutX="1039.0" layoutY="801.0" mnemonicParsing="false" onAction="#supprimertrajet" prefHeight="59.0" prefWidth="201.0" style="-fx-background-radius: 30;" text="supprimer trajet" textFill="#ff4400">
+         <font>
+            <Font size="11.0" />
+         </font></Button>
+      <TextField fx:id="idread" layoutX="273.0" layoutY="837.0" opacity="0.0" prefHeight="45.0" prefWidth="214.0" promptText="Id Trajet" />
+      <TextField fx:id="iduserField" layoutX="84.0" layoutY="450.0" opacity="0.0" prefHeight="45.0" prefWidth="214.0" promptText="Id Utilisateur" />
+      <TextField fx:id="idevField" layoutX="136.0" layoutY="836.0" opacity="0.0" prefHeight="45.0" prefWidth="214.0" promptText="Id transport" />
+      <TextField fx:id="datepartField1" layoutX="411.0" layoutY="66.0" opacity="0.0" prefHeight="45.0" prefWidth="214.0" promptText="Date Trajet" />
+      <DatePicker fx:id="datepartField" layoutX="778.0" layoutY="823.0" prefHeight="45.0" prefWidth="221.0" promptText="entrer le date" />
+      <Label layoutX="416.0" layoutY="238.0" prefHeight="60.0" prefWidth="424.0" text="AFFICHER Trajet">
+         <font>
+            <Font name="Calisto MT Bold" size="28.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#8a8a8ae8" />
+                  <Stop color="#ff1600" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button fx:id="ajouter" layoutX="78.0" layoutY="283.0" mnemonicParsing="false" onAction="#ajoutertransport" prefHeight="59.0" prefWidth="201.0" style="-fx-background-radius: 30;" text="ajouter transport" textFill="#ff4400">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <TextField fx:id="chercherevField" layoutX="1031.0" layoutY="574.0" nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#recherchertransport" prefHeight="57.0" prefWidth="246.0" promptText="donner le nom d'transport" style="-fx-background-radius: 30;" />
+      <ImageView fitHeight="195.0" fitWidth="200.0" layoutX="954.0" layoutY="82.0">
+         <image>
+            <Image url="@497501ec-07c7-4b7a-beec-8121836cb5ba.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
