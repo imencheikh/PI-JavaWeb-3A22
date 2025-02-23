@@ -6,8 +6,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -16,11 +18,15 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AfficherSponsor {
 
     @FXML
     private ListView<Sponsors> sponsorListView;
+
+    @FXML
+    private TextField searchField;  // Champ de recherche
 
     SponsorService sponsorService = new SponsorService();
 
@@ -68,18 +74,38 @@ public class AfficherSponsor {
 
         // Ajouter les sponsors à la ListView
         sponsorListView.getItems().setAll(sponsorsList);
-
-        // Événement de clic sur un élément
-        sponsorListView.setOnMouseClicked(event -> {
-            Sponsors selectedSponsor = sponsorListView.getSelectionModel().getSelectedItem();
-            System.out.println("Sponsor sélectionné : " + (selectedSponsor != null ? selectedSponsor.getNomSponsor() : "Aucun"));
-
-            if (selectedSponsor != null) {
-                ouvrirModifierSponsor(selectedSponsor);
-            }
-        });
     }
 
+    // Méthode pour rechercher les sponsors
+    @FXML
+    void rechercherSponsors() {
+        String recherche = searchField.getText().toLowerCase();
+        List<Sponsors> sponsorsList = sponsorService.getAll();
+
+        // Filtrer la liste des sponsors par nom
+        List<Sponsors> filteredList = sponsorsList.stream()
+                .filter(sponsor -> sponsor.getNomSponsor().toLowerCase().contains(recherche))
+                .collect(Collectors.toList());
+
+        // Mettre à jour la ListView
+        sponsorListView.getItems().setAll(filteredList);
+    }
+
+    // Méthode pour trier les sponsors par nom
+    @FXML
+    void trierSponsors() {
+        List<Sponsors> sponsorsList = sponsorService.getAll();
+
+        // Trier la liste des sponsors par nom
+        List<Sponsors> sortedList = sponsorsList.stream()
+                .sorted((s1, s2) -> s1.getNomSponsor().compareToIgnoreCase(s2.getNomSponsor()))
+                .collect(Collectors.toList());
+
+        // Mettre à jour la ListView avec la liste triée
+        sponsorListView.getItems().setAll(sortedList);
+    }
+
+    // Méthode pour ouvrir la fenêtre de modification d'un sponsor
     private void ouvrirModifierSponsor(Sponsors sponsor) {
         try {
             System.out.println("Ouverture de la fenêtre de modification...");

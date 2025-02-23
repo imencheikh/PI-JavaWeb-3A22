@@ -43,11 +43,19 @@ public class AjouterSponsor {
             showAlert("Erreur", "L'email du sponsor est invalide !");
             return;
         }
+
         // Vérification du nom du sponsor
         if (!isValidName(nomSponsor)) {
             showAlert("Erreur", "Le nom du sponsor ne doit contenir que des lettres et des espaces !");
             return;
         }
+
+        // Vérification si le sponsor existe déjà dans la base de données
+        if (sponsorService.getByName(nomSponsor) != null) {
+            showAlert("Erreur", "Un sponsor avec ce nom existe déjà !");
+            return;
+        }
+
         // Vérification si la contribution est un nombre valide
         float contribution;
         try {

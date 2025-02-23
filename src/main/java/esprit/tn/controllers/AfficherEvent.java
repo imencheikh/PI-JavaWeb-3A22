@@ -2,11 +2,13 @@ package esprit.tn.controllers;
 
 import esprit.tn.entities.Events;
 import esprit.tn.services.EventService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -15,24 +17,38 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AfficherEvent {
+    @FXML
+    private Text noResultsText;
 
     @FXML
     private ListView<Events> eventListView;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> sortComboBox;
 
-    EventService ev = new EventService();
+    private EventService ev = new EventService();
+    private ObservableList<Events> eventsList;
+    private ObservableList<Events> filteredEvents; // Liste affichée après la recherche
 
     @FXML
     void initialize() {
-        List<Events> eventsList = ev.getAll();
+        eventsList = FXCollections.observableArrayList(ev.getAll());
+        filteredEvents = FXCollections.observableArrayList(eventsList); // Initialiser avec tous les événements
+        setupListView();
+        setupSearchAndSort();
+    }
 
-        // Personnalisation de l'affichage des événements
-        eventListView.setCellFactory(new Callback<ListView<Events>, ListCell<Events>>() {
+    private void setupListView() {
+        eventListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<Events> call(ListView<Events> listView) {
-                return new ListCell<Events>() {
+                return new ListCell<>() {
                     @Override
                     protected void updateItem(Events event, boolean empty) {
                         super.updateItem(event, empty);
@@ -40,101 +56,104 @@ public class AfficherEvent {
                             setText(null);
                             setGraphic(null);
                         } else {
-                            VBox eventBox = new VBox();
-                            eventBox.setSpacing(5);
+                            VBox eventBox = new VBox(5);
                             eventBox.setStyle("-fx-background-color: #F8F9FA; -fx-padding: 15px; -fx-border-radius: 10px; -fx-border-color: #D1D1D1;");
 
-                            // Nom en GRAND
                             Text eventName = new Text(event.getNomEv());
                             eventName.setFont(new Font("Arial", 20));
                             eventName.setStyle("-fx-font-weight: bold; -fx-fill: #2C3E50;");
 
-                            // Date et Description
                             Text eventDate = new Text("📅 " + event.getDateEvent());
                             eventDate.setFont(new Font("Arial", 14));
                             eventDate.setStyle("-fx-fill: #7B7B7B;");
 
-                            Text eventDesc = new Text("A propos de l'evenement: "+event.getDescription());
+                            Text eventDesc = new Text("A propos de l'événement: " + event.getDescription());
                             eventDesc.setFont(new Font("Arial", 14));
                             eventDesc.setStyle("-fx-fill: #555;");
 
-                            Text eventSpon = new Text("Sponsorisé Par: "+event.getNomSp());
+                            Text eventSpon = new Text("Sponsorisé par: " + event.getNomSp());
                             eventSpon.setFont(new Font("Arial", 14));
                             eventSpon.setStyle("-fx-fill: #555;");
 
-                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc,eventSpon);
+                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc, eventSpon);
                             setGraphic(eventBox);
                         }
                     }
                 };
             }
         });
+        eventListView.setItems(filteredEvents);
 
-        // Ajouter les événements à la ListView
-        eventListView.getItems().setAll(eventsList);
-
-        // Événement de clic sur un élément
         eventListView.setOnMouseClicked(event -> {
             Events selectedEvent = eventListView.getSelectionModel().getSelectedItem();
-            System.out.println("Événement sélectionné : " + (selectedEvent != null ? selectedEvent.getIdEvent() : "Aucun"));
-
             if (selectedEvent != null) {
                 ouvrirModifierEvent(selectedEvent);
             }
         });
     }
 
-    // Méthode pour ouvrir l'interface AjouterEvent.fxml
+    private void setupSearchAndSort() {
+        sortComboBox.getItems().addAll("Nom", "Date");
+
+        sortComboBox.setOnAction(event -> sortEvents());
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchEvents(newValue));
+    }
+
+    private void searchEvents(String query) {
+        filteredEvents.setAll(eventsList.stream()
+                .filter(event -> event.getNomEv().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList()));
+
+        noResultsText.setVisible(filteredEvents.isEmpty());
+        eventListView.setItems(filteredEvents);
+
+        sortEvents(); // Appliquer le tri après la recherche
+    }
+
+    private void sortEvents() {
+        if (sortComboBox.getValue() == null) return;
+
+        Comparator<Events> comparator = sortComboBox.getValue().equals("Nom")
+                ? Comparator.comparing(Events::getNomEv, String.CASE_INSENSITIVE_ORDER)
+                : Comparator.comparing(Events::getDateEvent);
+
+        FXCollections.sort(filteredEvents, comparator);
+    }
+
     @FXML
     private void ouvrirAjouterEvent() {
         try {
-            System.out.println("Ouverture de l'interface AjouterEvent.fxml...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterEvent.fxml"));
             Parent root = loader.load();
-
-            // Obtenez le contrôleur de l'interface AjouterEvent
-            AjouterEvent controller = loader.getController();
-
             Stage stage = new Stage();
-            stage.setTitle("Ajouter un Événement");
+            stage.setTitle("Gestion des événements");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement de AjouterEvent.fxml !");
         }
     }
+
     private void ouvrirModifierEvent(Events event) {
         try {
-            System.out.println("Ouverture de la fenêtre de modification...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
             Parent root = loader.load();
-
             ModifierEvent controller = loader.getController();
             controller.setEvent(event);
-
-            // Passez le contrôleur d'affichage pour mettre à jour la liste après modification ou suppression
             controller.setAfficherEventController(this);
-
             Stage stage = new Stage();
             stage.setTitle("Modifier / Supprimer un Événement");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement de ModifierEvent.fxml !");
         }
     }
 
-    // Méthode pour rafraîchir la liste des événements
     public void refreshList() {
-        // Recharger les événements depuis le service
-        List<Events> eventsList = ev.getAll();
-
-        // Mettre à jour la ListView
-        eventListView.getItems().setAll(eventsList);
-
-        // Forcer la réaffichage de la ListView
+        eventsList.setAll(ev.getAll());
+        filteredEvents.setAll(eventsList); // Mettre aussi à jour la liste filtrée
         eventListView.requestLayout();
     }
 }

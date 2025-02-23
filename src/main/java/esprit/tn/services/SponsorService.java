@@ -130,4 +130,22 @@ public class SponsorService {
         }
         return null;
     }
+    public Sponsors getByName(String nomSponsor) {
+        String query = "SELECT * FROM sponsors WHERE nomSponsor = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, nomSponsor);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Sponsors sponsor = new Sponsors();
+                sponsor.setNomSponsor(resultSet.getString("nomSponsor"));
+                sponsor.setEmailSpon(resultSet.getString("emailSpon"));
+                sponsor.setContribution(resultSet.getFloat("contribution"));
+                return sponsor; // Retourne l'objet sponsor si trouvé
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Retourne null si aucun sponsor avec ce nom n'est trouvé
+    }
+
 }

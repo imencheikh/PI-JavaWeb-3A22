@@ -118,6 +118,16 @@ public class AjouterEvent  {
         }
 
         comboBoxSponsors.setItems(sponsorNames); // Remplir la ComboBox
+
+        // Limiter la sélection du DatePicker aux dates futures (y compris la date actuelle)
+        dateEvent.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                // Désactiver les dates avant aujourd'hui
+                setDisable(empty || date.isBefore(LocalDate.now()));
+            }
+        });
     }
 
 
