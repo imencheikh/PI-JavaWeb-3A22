@@ -129,6 +129,24 @@ public class AjouterReclamation implements Initializable {
         }
     }
 
+    public void afficher2(ActionEvent actionEvent) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficher_reponse.fxml"));
+            Parent root = loader.load();
+
+
+            Stage stage = new Stage();
+            stage.setTitle("Liste des Réponses");
+            stage.setScene(new Scene(root));
+
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
    /* @FXML
     void afficher1(ActionEvent event) {

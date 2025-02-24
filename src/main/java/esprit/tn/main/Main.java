@@ -122,8 +122,8 @@ public class Main {
             System.out.print("Entrez votre réponse : ");
             String reponse = scanner.nextLine();
 
-            Reponse reponseObj = new Reponse(0, idReclamation, reponse);
-            reponseService.ajouter(reponseObj);
+           // Reponse reponseObj = new Reponse(0, idReclamation, reponse);
+           // reponseService.ajouter(reponseObj);
             System.out.println("Réponse ajoutée avec succès !");
 
         } else if (choixAction == 5) {
@@ -141,8 +141,8 @@ public class Main {
             System.out.print("Entrez la nouvelle réponse : ");
             String nouvelleReponse = scanner.nextLine();
 
-            Reponse reponseObj = new Reponse(idReponse, 0, nouvelleReponse);
-            reponseService.modifier(reponseObj);
+           // Reponse reponseObj = new Reponse(idReponse, 0, nouvelleReponse);
+            //reponseService.modifier(reponseObj);
             System.out.println("Réponse modifiée avec succès !");
 
         } else if (choixAction == 7) {

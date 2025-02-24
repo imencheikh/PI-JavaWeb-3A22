@@ -2,6 +2,7 @@ package controllers;
 
 import esprit.tn.entities.Reclamation;
 import esprit.tn.services.ReclamationService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,12 +14,20 @@ import javafx.scene.paint.Color;
 
 
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
 
+
+
 public class AfficherReclamation {
+
+    @FXML
+    private TextField searchField;
 
     @FXML
     private ListView<VBox> listViewReclamations;
@@ -49,9 +58,18 @@ public class AfficherReclamation {
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);");
 
         // Nom de l'utilisateur
-        Label nom = new Label("👤 " + rec.getNom_utilisateur());
-        nom.setFont(new Font("Arial Bold", 16));
-        nom.setTextFill(Color.BLACK);
+        Label nom = new Label();
+        Text symbolNom = new Text("👤 ");
+        symbolNom.setFill(Color.web("#FF5722")); // Changer la couleur du symbole (ici orange)
+
+        // Nom avec texte en gras et couleur orange
+        Text textNom = new Text(rec.getNom_utilisateur());
+        textNom.setFont(Font.font("Arial", FontWeight.BOLD, 16)); // Texte en gras
+        textNom.setFill(Color.web("#FF5722")); // Texte en orange
+
+        // Combine le symbole et le texte dans un TextFlow
+        nom.setGraphic(new TextFlow(symbolNom, textNom));
+
 
         // Email de l'utilisateur
         Label email = new Label("📧 " + rec.getEmail());
@@ -71,6 +89,11 @@ public class AfficherReclamation {
         Button deleteButton = new Button("Supprimer");
         Button responseButton = new Button("Repondre");
 
+        // Styles des boutons
+        modifyButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        responseButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;");
+
 
         // Modifier Button action
         modifyButton.setOnAction(event -> modifier(rec));
@@ -82,10 +105,9 @@ public class AfficherReclamation {
             System.out.println("Réclamation supprimée : " + rec.getNom_utilisateur());
         });
         responseButton.setOnAction(event -> afficher1(rec));
-        
 
-        buttonsBox.getChildren().addAll(modifyButton, deleteButton,responseButton);
 
+        buttonsBox.getChildren().addAll(modifyButton, deleteButton, responseButton);
 
 
         card.getChildren().addAll(nom, email, description, buttonsBox);
@@ -138,7 +160,6 @@ public class AfficherReclamation {
     }
 
 
-
     @FXML
     private void afficher1(Reclamation rec) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ajouter_reponse.fxml"));
@@ -165,6 +186,46 @@ public class AfficherReclamation {
         }
     }
 
+
+    @FXML
+    private void rechercherReclamation() {
+        String emailRecherche = searchField.getText().trim().toLowerCase();
+
+        listViewReclamations.getItems().clear(); // Effacer la liste actuelle
+
+        List<Reclamation> resultats = RS.getAll().stream()
+                .filter(rec -> rec.getEmail().toLowerCase().contains(emailRecherche))
+                .toList();
+
+        if (resultats.isEmpty()) {
+            listViewReclamations.getItems().add(createEmptyMessage());
+        } else {
+            for (Reclamation rec : resultats) {
+                listViewReclamations.getItems().add(createCard(rec));
+            }
+        }
+
+
+
+
+    }
+
+
+    @FXML
+    void afficherstat(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/afficher_statistique.fxml"));
+            Parent root = loader.load();
+            Stage newStage = new Stage();
+            newStage.setTitle("statistique");
+            newStage.setScene(new Scene(root));
+
+
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

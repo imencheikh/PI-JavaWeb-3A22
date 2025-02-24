@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import esprit.tn.services.ReponseService;
@@ -52,12 +53,28 @@ public class AjouterReponse {
     @FXML
     void ajouter(ActionEvent actionEvent) {
         String reponse = TFrep.getText();
+
+        // Vérifier si le champ réponse est vide
+        if (reponse.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Champ vide", "Veuillez saisir une réponse !");
+            return;
+        }
+
         int idrec = Integer.parseInt(TFid.getText());
         Reponse r = new Reponse(idrec, reponse);
         reponseService.ajouter(r);
+
+        // Affichage du message de confirmation
+        showAlert(Alert.AlertType.INFORMATION, "Succès", "Ajout de réponse effectué !");
     }
 
-
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // Pas d'en-tête
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
     public void afficher2(ActionEvent actionEvent) {

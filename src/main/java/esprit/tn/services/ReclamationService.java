@@ -6,6 +6,7 @@ import esprit.tn.entities.Reclamation;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +25,8 @@ public  class ReclamationService implements Iservice<Reclamation>{
 
     // Déclaration de la liste des réclamations
     private List<Reclamation> reclamations;
+
+
 
     @Override
     public void ajouter(Reclamation reclamation) {
@@ -141,12 +144,12 @@ public  class ReclamationService implements Iservice<Reclamation>{
 
 
     public void afficher() {
-        List<Reclamation> reclamations = getAll(); // Récupérer toutes les réclamations
+            List<Reclamation> reclamations = getAll(); // Récupérer toutes les réclamations
 
-        // Affichage des réclamations dans le terminal
-        if (reclamations.isEmpty()) {
-            System.out.println("Aucune réclamation à afficher.");
-        } else {
+            // Affichage des réclamations dans le terminal
+            if (reclamations.isEmpty()) {
+                System.out.println("Aucune réclamation à afficher.");
+            } else {
             for (Reclamation reclamation : reclamations) {
                 System.out.println("ID: " + reclamation.getId_reclamation() +
                         ", Nom: " + reclamation.getNom_utilisateur() +

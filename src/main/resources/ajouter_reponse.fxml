@@ -24,38 +24,38 @@
                </VBox.margin>
             </ImageView>
             <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="🏠 Accueil">
-               <VBox.margin>
-                  <Insets left="7.0" top="60.0" />
-               </VBox.margin>
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
-            </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="📅 Gestion Reservation">
-               <VBox.margin>
-                  <Insets bottom="20.0" left="7.0" top="40.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="🎉 Gestion Evenement">
                <VBox.margin>
                   <Insets left="7.0" top="20.0" />
                </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="📅 Reservation">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
-            </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="📢 Gestion Reclamation">
                <VBox.margin>
-                  <Insets left="7.0" top="40.0" />
+                  <Insets left="7.0" top="20.0" />
                </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="🎉 Evenement">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <VBox.margin>
+                  <Insets left="7.0" top="20.0" />
+               </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#afficher2" prefHeight="25.0" prefWidth="125.0" text="afficher">
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="📢 Reclamation">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="7.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Ajouter Réponse">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -63,13 +63,21 @@
                   <Insets left="50.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="173.0" text="🚗 GestionTransport">
-               <VBox.margin>
-                  <Insets left="7.0" top="40.0" />
-               </VBox.margin>
+            <Button mnemonicParsing="false" onAction="#afficher2" prefHeight="25.0" prefWidth="132.0" text="Liste Réponse">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="173.0" text="🚗 Transport">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="7.0" top="20.0" />
+               </VBox.margin>
             </Button>
          </children>
       </VBox>
@@ -82,12 +90,12 @@
       </Label>
 
       <!-- Champ id-reclamation -->
-      <Label layoutX="263.0" layoutY="85.0" prefHeight="17.0" prefWidth="104.0" text="Id Reclamation" textFill="#27567a">
+      <Label layoutX="263.0" layoutY="85.0" prefHeight="17.0" prefWidth="104.0" text="Id Reclamation" textFill="#27567a" visible="false">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="TFid" editable="false" layoutX="375.0" layoutY="81.0" prefHeight="25.0" prefWidth="85.0" />
+      <TextField fx:id="TFid" editable="false" layoutX="375.0" layoutY="81.0" prefHeight="25.0" prefWidth="85.0" visible="false" />
 
       <!-- Champ Nom -->
       <Label layoutX="281.0" layoutY="118.0" text="Nom" textFill="#27567a">

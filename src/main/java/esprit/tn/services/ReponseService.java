@@ -27,6 +27,7 @@ public class ReponseService implements Iservice <Reponse> {
             insertStmt.setInt(1, reponse.getId_reclamation());
             insertStmt.setString(2, reponse.getReponse());
 
+
             insertStmt.executeUpdate();
             System.out.println("Réponse ajoutée avec succès !");
         } catch (SQLException e) {
@@ -99,7 +100,7 @@ public class ReponseService implements Iservice <Reponse> {
 
     public List<Reponse> getAll() {
         List<Reponse> reponses = new ArrayList<>();
-        String req = "SELECT * FROM reponse";
+        String req = "SELECT   reponse.id_reponse,reponse.id_reclamation,reponse.reponse,reponse.date_reponse,reclamation.id_reclamation,reclamation.nom_utilisateur,reclamation.email,reclamation.description FROM reponse INNER JOIN reclamation ON reponse.id_reclamation = reclamation.id_reclamation;";
 
         try {
             Statement stm = cnx.createStatement();
@@ -109,7 +110,12 @@ public class ReponseService implements Iservice <Reponse> {
                 Reponse reponse = new Reponse();
                 reponse.setId_reponse(rs.getInt("id_reponse"));
                 reponse.setId_reclamation(rs.getInt("id_reclamation"));
+                reponse.setNom_utilisateur(rs.getString("nom_utilisateur"));
+                reponse.setEmail(rs.getString("email"));
+                reponse.setDescription(rs.getString("description"));
                 reponse.setReponse(rs.getString("reponse"));
+
+
 
                 reponses.add(reponse);  // Add the Reponse object to the list
             }
