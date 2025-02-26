@@ -29,6 +29,7 @@
             <Insets top="40.0" />
          </VBox.margin>
       </Button>
+      <Button onAction="#ouvrirHistorique" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="📜 Historique" />
 
       <Button onAction="#ouvrirAjouterEvent" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="➕ Ajouter Événement" />
    </VBox>

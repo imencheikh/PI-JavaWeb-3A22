@@ -9,22 +9,25 @@ public class Events {
     private String description;
     private Date dateEvent;
     private String nomSp;
+    private String lieu;
     public Events(){}
-    public Events(int idEvent,String nomEv,String description,Date dateEvent, String nomSp)
+    public Events(int idEvent,String nomEv,String description,Date dateEvent, String nomSp, String lieu)
     {
         this.idEvent=idEvent;
         this.nomEv=nomEv;
         this.description=description;
         this.dateEvent=dateEvent;
         this.nomSp=nomSp;
+        this.lieu=lieu;
 
     }
-    public Events(String nomEv,String description,Date dateEvent)
+    public Events(String nomEv,String description,Date dateEvent,String lieu)
     {
 
         this.nomEv=nomEv;
         this.description=description;
         this.dateEvent=dateEvent;
+        this.lieu=lieu;
 
     }
 
@@ -66,6 +69,13 @@ public class Events {
 
     public String getNomSp() {
         return nomSp;
+    }
+    public String getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
     }
 
     @Override

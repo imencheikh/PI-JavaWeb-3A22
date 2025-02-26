@@ -1,5 +1,4 @@
 package esprit.tn.controllers;
-
 import esprit.tn.entities.Events;
 import esprit.tn.services.EventService;
 import javafx.collections.FXCollections;
@@ -15,10 +14,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.List;
+import java.util.List ;
 import java.util.stream.Collectors;
 
 public class AfficherEvent {
@@ -71,11 +69,15 @@ public class AfficherEvent {
                             eventDesc.setFont(new Font("Arial", 14));
                             eventDesc.setStyle("-fx-fill: #555;");
 
+                          Text eventLieu = new Text("Lieu : " + event.getLieu());
+                            eventLieu.setFont(new Font("Arial", 14));
+                            eventLieu.setStyle("-fx-fill: #555;");
+
                             Text eventSpon = new Text("Sponsorisé par: " + event.getNomSp());
                             eventSpon.setFont(new Font("Arial", 14));
                             eventSpon.setStyle("-fx-fill: #555;");
 
-                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc, eventSpon);
+                            eventBox.getChildren().addAll(eventName, eventDate, eventDesc, eventLieu,eventSpon);
                             setGraphic(eventBox);
                         }
                     }
@@ -156,4 +158,19 @@ public class AfficherEvent {
         filteredEvents.setAll(eventsList); // Mettre aussi à jour la liste filtrée
         eventListView.requestLayout();
     }
+
+    @FXML
+    private void ouvrirHistorique() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historique.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Historique des événements");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

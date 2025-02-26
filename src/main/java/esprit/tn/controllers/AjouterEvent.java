@@ -35,7 +35,8 @@ public class AjouterEvent  {
     private TextField TFNomEvent;
     @FXML
     private ComboBox<String> comboBoxSponsors;
-
+    @FXML
+    private TextField TFLieuEvent;
     private SponsorService sponsorService = new SponsorService();
 
 
@@ -45,8 +46,9 @@ public class AjouterEvent  {
         String description = TFDescription.getText().trim();
         LocalDate date = dateEvent.getValue();
         String nomSp=comboBoxSponsors.getValue();
+        String lieu = TFLieuEvent.getText().trim();
         // Vérification des champs obligatoires
-        if (nomEv.isEmpty() || description.isEmpty() || date == null || comboBoxSponsors == null) {
+        if (nomEv.isEmpty() || description.isEmpty() || date == null || comboBoxSponsors == null || lieu.isEmpty()) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
@@ -55,12 +57,18 @@ public class AjouterEvent  {
             showAlert("Erreur", "Le nom de l'événement ne doit contenir que des lettres et des espaces !");
             return;
         }
+        // Vérification que le nom de l'événement ne contient que des lettres
+        if (!lieu.matches("[a-zA-Z\\s]+")) {
+            showAlert("Erreur", "Le lieu de l'événement ne doit contenir que des lettres !");
+            return;
+        }
         // Création de l'événement
         Events ev = new Events();
         ev.setNomEv(nomEv);
         ev.setDescription(description);
         ev.setDateEvent(Date.valueOf(date));
         ev.setNomSp(nomSp);
+        ev.setLieu(lieu);
 
         // Ajout à la base de données avec gestion d'erreur
         try {
@@ -71,6 +79,7 @@ public class AjouterEvent  {
             TFDescription.clear();
             dateEvent.setValue(null);
             comboBoxSponsors.setValue(null);
+            TFLieuEvent.clear();
         } catch (Exception e) {
             showAlert("Erreur", "Impossible d'ajouter l'événement : " + e.getMessage());
         }
@@ -92,6 +101,7 @@ public class AjouterEvent  {
         TFDescription.getScene().setRoot(root);
         dateEvent.getScene().setRoot(root);
         comboBoxSponsors.getScene().setRoot(root);
+        TFLieuEvent.getScene().setRoot(root);
         /////////////////////////////////
 
 

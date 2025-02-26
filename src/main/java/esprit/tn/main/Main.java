@@ -43,7 +43,7 @@ public class Main {
                         java.sql.Date dateEvent = java.sql.Date.valueOf(dateEventStr);
 
                         // Création de l'événement avec la date convertie
-                        Events E = new Events(nomEv, description, dateEvent);
+                        //Events E = new Events(nomEv, description, dateEvent,lieu);
                        // ev.ajouter(E);
 
                         System.out.println("Événement ajouté avec succès !");

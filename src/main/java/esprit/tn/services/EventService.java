@@ -14,9 +14,9 @@ public class EventService implements Iservice<Events> {
 
     @Override
     public void ajouter(Events event) throws SQLException {
-
+        int idEvent=0;
         ////////////////////////
-        String req = "INSERT INTO events (nomEv, description, dateEvent,nomSp) VALUES (?, ?, ?,?)";
+        String req = "INSERT INTO events (nomEv, description, dateEvent,nomSp,lieu) VALUES (?, ?, ?,?,?)";
 
         try {
             PreparedStatement stm = cnx.prepareStatement(req);
@@ -25,15 +25,34 @@ public class EventService implements Iservice<Events> {
             java.sql.Date sqlDate = new java.sql.Date(event.getDateEvent().getTime());
             stm.setDate(3, sqlDate);
             stm.setString(4, event.getNomSp());
+            stm.setString(5, event.getLieu());
+
             stm.executeUpdate();
+
+
+            String req2 = "SELECT MAX(idEvent) AS lastIdEvent FROM events;";
+            try (Statement stmt = cnx.createStatement(); ResultSet rs = stmt.executeQuery(req2)) {
+                if (rs.next()) {
+                   idEvent= rs.getInt("lastIdEvent");
+                    System.out.println(idEvent);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
+
+                new HistoriqueService().enregistrerAction("Ajout", idEvent, "Ajout de l'événement: " + event.getNomEv());
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void modifier(Events event) {
-        String reqSelect = "SELECT nomEv, description, dateEvent ,nomSp FROM events WHERE idEvent = ?";
-        String reqUpdate = "UPDATE events SET nomEv = ?, description = ?, dateEvent = ? ,nomSp= ? WHERE idEvent = ?";
+        String reqSelect = "SELECT nomEv, description, dateEvent ,nomSp,lieu FROM events WHERE idEvent = ?";
+        String reqUpdate = "UPDATE events SET nomEv = ?, description = ?, dateEvent = ? ,nomSp= ?,lieu= ? WHERE idEvent = ?";
 
         try (
                 PreparedStatement stmSelect = cnx.prepareStatement(reqSelect);
@@ -46,17 +65,19 @@ public class EventService implements Iservice<Events> {
                     String oldDescription = rs.getString("description");
                     java.sql.Date oldDateEvent = rs.getDate("dateEvent");
                     String oldNomSp = rs.getString("nomSp");
-
+                    String oldLieu = rs.getString("lieu");
                     String newNomEv = (event.getNomEv() == null || event.getNomEv().isEmpty()) ? oldNomEv : event.getNomEv();
                     String newDescription = (event.getDescription() == null || event.getDescription().isEmpty()) ? oldDescription : event.getDescription();
                     java.sql.Date newDateEvent = (event.getDateEvent() == null) ? oldDateEvent : new java.sql.Date(event.getDateEvent().getTime());
                     String newNomSp = (event.getNomSp() == null || event.getNomSp().isEmpty()) ? oldNomSp : event.getNomSp();
+                    String newLieu= (event.getLieu() == null || event.getLieu().isEmpty()) ? oldLieu : event.getLieu();
 
                     stmUpdate.setString(1, newNomEv);
                     stmUpdate.setString(2, newDescription);
                     stmUpdate.setDate(3, newDateEvent);
                     stmUpdate.setString(4, newNomSp);
-                    stmUpdate.setInt(5, event.getIdEvent());
+                    stmUpdate.setString(5, newLieu);
+                    stmUpdate.setInt(6, event.getIdEvent());
 
                     int rowsUpdated = stmUpdate.executeUpdate();
                     if (rowsUpdated > 0) {
@@ -68,6 +89,10 @@ public class EventService implements Iservice<Events> {
                     System.out.println("Événement introuvable avec l'ID : " + event.getIdEvent());
                 }
             }
+            System.out.println(event.getIdEvent());
+            new HistoriqueService().enregistrerAction("Modification", event.getIdEvent(), "Modification de l'événement: " + event.getNomEv());
+
+
         } catch (SQLException e) {
             System.err.println("Erreur de base de données : " + e.getMessage());
             e.printStackTrace();
@@ -85,6 +110,10 @@ public class EventService implements Iservice<Events> {
             } else {
                 System.out.println("Aucune event trouvée avec cet ID.");
             }
+
+            new HistoriqueService().enregistrerAction("Suppression", event.getIdEvent(), "Suppression de l'événement : " + event.getNomEv());
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -105,6 +134,7 @@ public class EventService implements Iservice<Events> {
                 E.setDescription(rs.getString("Description"));
                 E.setDateEvent(rs.getDate("DateEvent"));
                 E.setNomSp(rs.getString("NomSp"));
+                E.setLieu(rs.getString("Lieu"));
                 ev.add(E);
             }
 
@@ -128,6 +158,7 @@ public class EventService implements Iservice<Events> {
                     event.setDescription(rs.getString("Description"));
                     event.setDateEvent(rs.getDate("DateEvent"));
                     event.setNomSp(rs.getString("NomSp"));
+                    event.setLieu(rs.getString("Lieu"));
                     return event;
                 }
             }

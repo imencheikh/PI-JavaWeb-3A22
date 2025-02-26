@@ -30,6 +30,8 @@ public class ModifierEvent {
     @FXML
     private ComboBox<String> comboBoxSponsors;
     @FXML
+    private TextField TFLieuEvent;
+    @FXML
     private Button btnModifier;
     @FXML
     private Button btnSupprimer;
@@ -56,7 +58,7 @@ public class ModifierEvent {
             TFNomEvent.setText(event.getNomEv());
             TFDescription.setText(event.getDescription());
             comboBoxSponsors.setValue(event.getNomSp());
-
+            TFLieuEvent.setText(event.getLieu());
             Date date = event.getDateEvent();
             if (date instanceof java.sql.Date) {
                 LocalDate localDate = ((java.sql.Date) date).toLocalDate();
@@ -76,6 +78,7 @@ public class ModifierEvent {
             selectedEvent.setDescription(TFDescription.getText());
             selectedEvent.setDateEvent(java.sql.Date.valueOf(dateEvent.getValue()));
             selectedEvent.setNomSp(comboBoxSponsors.getValue());
+            selectedEvent.setLieu(TFLieuEvent.getText());
             eventService.modifier(selectedEvent);
 
             afficherAlerte("Modification", "Événement modifié avec succès !");
@@ -137,6 +140,13 @@ public class ModifierEvent {
         String nomEv = TFNomEvent.getText().trim();
         if (!nomEv.matches("[a-zA-Z\\s]+")) {
             afficherAlerte("Erreur", "Le nom de l'événement ne doit contenir que des lettres et des espaces !");
+            return false;
+        }
+
+        // Vérification que le lieu de l'événement contient uniquement des lettres et des espaces
+        String lieu = TFLieuEvent.getText().trim();
+        if (!nomEv.matches("[a-zA-Z\\s]+")) {
+            afficherAlerte("Erreur", "Le lieu de l'événement ne doit contenir que des lettres et des espaces !");
             return false;
         }
 
