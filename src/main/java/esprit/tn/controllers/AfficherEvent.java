@@ -173,4 +173,26 @@ public class AfficherEvent {
         }
     }
 
+    @FXML
+    private void ouvrirLocalisationEvent() {
+        Events selectedEvent = eventListView.getSelectionModel().getSelectedItem();
+        if (selectedEvent != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/LocalisationEvent.fxml"));
+                Parent root = loader.load();
+
+                LocalisationEvent controller = loader.getController();
+                controller.setLocation(selectedEvent.getLieu());
+
+                Stage stage = new Stage();
+                stage.setTitle("Localisation de l'événement");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

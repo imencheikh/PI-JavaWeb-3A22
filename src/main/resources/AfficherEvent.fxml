@@ -11,9 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.collections.ObservableList?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 <AnchorPane prefHeight="638.0" prefWidth="812.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="esprit.tn.controllers.AfficherEvent">
 
    <!-- Sidebar -->
@@ -29,9 +26,21 @@
             <Insets top="40.0" />
          </VBox.margin>
       </Button>
-      <Button onAction="#ouvrirHistorique" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="📜 Historique" />
+      <Button onAction="#ouvrirHistorique" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="📜 Historique">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></Button>
 
-      <Button onAction="#ouvrirAjouterEvent" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="➕ Ajouter Événement" />
+      <Button onAction="#ouvrirAjouterEvent" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn" text="➕ Ajouter Événement">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></Button>
+      <Button onAction="#ouvrirLocalisationEvent" prefHeight="42.0" prefWidth="201.0" text="📍 Voir la carte">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></Button>
+
+
    </VBox>
 
    <!-- Contenu principal -->
